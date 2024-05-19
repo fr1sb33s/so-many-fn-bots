@@ -34,7 +34,7 @@ const draw_results_table = async () => {
 
     const replays = (await get_latest_replays()).map(g => Object.values(g));
 
-    const table_data = [["GameId", "# of Real Players", "# of Kills", "# Real Player Kills", "Place", "Date of Game"]].concat(replays);
+    const table_data = [["GameId", "# of Real Players", "# of Kills", "# Real Player Kills", "Place", "Elminated By", "Date of Game"]].concat(replays);
 
     term.table(table_data);
 

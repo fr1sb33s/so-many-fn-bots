@@ -64,6 +64,7 @@ const replay_writer = async (file_data) => {
         place: user_game_stats.Place,
         num_kills: user_game_stats.KillScore ?? 0,
         num_real_player_kills: await get_number_of_real_player_kills(parsed_replay.events, players, user.id),
+        eliminated_by: await get_eliminated_by(parsed_replay.events, players, user.id),
         created_on: game_date
       }
     });
@@ -74,6 +75,22 @@ const replay_writer = async (file_data) => {
   } catch (error) {
     console.log("Could not parse replay file: exiting");
   }
+}
+
+const get_eliminated_by = async (events, players, user_id) => {
+  const delete_event = events.filter(
+    e => e.group === 'playerElim' && e.eliminated === user_id && e.knocked == false
+  ).pop();
+
+  const id = delete_event.eliminator;
+
+  const who_deleted_me = players.filter(p => id === p.UniqueID);
+
+  if (who_deleted_me.length >= 1) {
+    return who_deleted_me.pop().PlayerNamePrivate;
+  }
+
+  return null;
 }
 
 const get_number_of_real_player_kills = async (events, players, user_id) => {

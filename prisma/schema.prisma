@@ -16,6 +16,7 @@ model Game {
   num_kills             Int
   num_real_player_kills Int
   place                 Int
+  eliminated_by         String?
   created_on            DateTime
 
   @@index([created_on(sort: Desc)])
