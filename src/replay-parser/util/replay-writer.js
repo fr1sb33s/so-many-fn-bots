@@ -57,6 +57,8 @@ const replay_writer = async (file_data) => {
       return;
     }
 
+    const elminated_by = user_game_stats.Place != 1 ? await get_eliminated_by(parsed_replay.events, players, user.id) : null;
+
     await prisma.game.create({
       data: {
         id: game_id,
@@ -64,7 +66,7 @@ const replay_writer = async (file_data) => {
         place: user_game_stats.Place,
         num_kills: user_game_stats.KillScore ?? 0,
         num_real_player_kills: await get_number_of_real_player_kills(parsed_replay.events, players, user.id),
-        eliminated_by: await get_eliminated_by(parsed_replay.events, players, user.id),
+        eliminated_by: elminated_by,
         created_on: game_date
       }
     });
