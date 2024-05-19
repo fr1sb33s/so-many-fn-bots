@@ -1,0 +1,26 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../data/dev.db"
+}
+
+model Game {
+  id                    String   @id
+  num_real_players      Int
+  num_kills             Int
+  num_real_player_kills Int
+  place                 Int
+  created_on            DateTime
+
+  @@index([created_on(sort: Desc)])
+}
+
+model User {
+  id String @id
+}

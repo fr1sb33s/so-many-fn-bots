@@ -1,20 +1,38 @@
-const fs = require('fs');
-const parseReplay = require('fortnite-replay-parser');
-const replayBuffer = fs.readFileSync('UnsavedReplay-2024.04.06-20.21.58.replay');
+import termkit from 'terminal-kit';
+import get_latest_replays from './src/replay-retreiver/index.js';
+import queue_jobs from './src/replay-parser/parser.js';
 
-const config = {
-    parseLevel: 10,
-    debug: false,
+const term = termkit.terminal;
+
+term.grabInput();
+
+term.on('key', async (name) => {
+    if (name === 'r') {
+        console.log('reloading results....');
+
+        await draw_results_table();
+    }
+
+    if (name === 'CTRL_C') { process.exit(); }
+});
+
+const draw_results_table = async () => {
+    term.clear();
+
+    await queue_jobs();
+
+    term.clear();
+
+    const replays = (await get_latest_replays()).map(g => Object.values(g));
+
+    const table_data = [["GameId", "# of Real Players", "# of Kills", "# Real Player Kills", "Place", "Date of Game"]].concat(replays);
+
+    term.table(table_data);
+
+    term.bold.cyan('Press r to reload results...\n');
+
+    term.green('Hit CTRL-C to quit.\n\n');
 }
 
-parseReplay(replayBuffer, config).then((parsedReplay) => {
-    const player_data = parsedReplay.gameData.players;
+await draw_results_table();
 
-    const number_of_real_players = player_data.filter(p => !p.bIsABot).length;
-
-    console.log(`There were ${number_of_real_players} real players in this game`);
-
-    fs.writeFileSync('parsed-replay-2024.04.06-20.21.58.json', JSON.stringify(player_data));
-}).catch((err) => {
-    console.error('An error occured while parsing the replay!', err);
-});
