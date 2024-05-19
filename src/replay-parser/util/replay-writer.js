@@ -78,11 +78,12 @@ const replay_writer = async (file_data) => {
 
 const get_number_of_real_player_kills = async (events, players, user_id) => {
   const real_player_ids = players.filter(
-    p => !p.bIsABot && p.UniqueID !== user_id).map(p => p.UniqueID
-    );
+    p => !p.bIsABot && p.UniqueID !== user_id
+  )
+    .map(p => p.UniqueID);
 
   const player_eliminations = events.filter(
-    e => e.group === 'playerElim' && e.eliminator === user_id && e.eliminated !== user_id
+    e => e.group === 'playerElim' && e.eliminator === user_id && e.eliminated !== user_id && e.knocked == false
   );
 
   console.log(`Eliminated ${player_eliminations.length} players`);
