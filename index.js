@@ -16,7 +16,7 @@ const term = termkit.terminal;
 term.grabInput();
 
 term.on('key', async (name) => {
-    if (name === 'r') {
+    if (name.toLowerCase() === 'r') {
         console.log('reloading results....');
 
         await draw_results_table();
