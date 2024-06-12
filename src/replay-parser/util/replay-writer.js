@@ -25,7 +25,7 @@ const replay_writer = async (file_data) => {
 
     const players = parsed_replay.gameData.players;
 
-    const number_of_real_players = players.filter(p => !p.bIsABot && p.Place !== undefined).length;
+    const number_of_real_players = players.filter(p => !p.bIsABot && p.UniqueID && p.UniqueID.length > 1).length;
 
     const replay_log_msg = [
       "We have successfully parsed the replay file",
